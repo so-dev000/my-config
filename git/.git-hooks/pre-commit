@@ -1,0 +1,79 @@
+#!/bin/bash
+# Pre-commit hook with AI code review integration
+
+set -euo pipefail
+
+# Colors
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly BOLD='\033[1m'
+readonly NC='\033[0m'
+
+# Configuration
+readonly HOOKS_DIR="$HOME/.git-hooks"
+readonly AI_REVIEW_SCRIPT="$HOOKS_DIR/ai-review.sh"
+readonly LOCAL_HOOK=".git/hooks/pre-commit"
+
+if [ -x "$LOCAL_HOOK" ]; then
+    echo -e "${BLUE}${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}${BOLD}  Running Local Pre-commit Hook${NC}"
+    echo -e "${BLUE}${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+    if ! "$LOCAL_HOOK"; then
+        echo ""
+        echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${RED}✗ Local pre-commit hook failed${NC}"
+        echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        exit 1
+    fi
+    echo ""
+    echo -e "${GREEN}✓ Local pre-commit hook completed successfully${NC}"
+    echo ""
+fi
+
+# Check for AI_REVIEW flag
+RUN_AI_REVIEW=0
+if [ -f .git/AI_REVIEW ]; then
+    RUN_AI_REVIEW=1
+    rm -f .git/AI_REVIEW
+fi
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [ -z "$STAGED_FILES" ]; then
+    exit 0
+fi
+
+if [ "$RUN_AI_REVIEW" -eq 1 ]; then
+    if [ ! -x "$AI_REVIEW_SCRIPT" ]; then
+        echo -e "${RED}✗ AI review script not found:${NC} $AI_REVIEW_SCRIPT"
+        echo -e "  Please ensure the script exists and is executable."
+        exit 1
+    fi
+
+    if "$AI_REVIEW_SCRIPT"; then
+        echo ""
+        echo -e "${BOLD}Proceed with commit? (y/n)${NC}"
+        exec < /dev/tty
+        read -r response
+
+        if [ "$response" != "y" ] && [ "$response" != "Y" ]; then
+            echo -e "${YELLOW}⚠ Commit aborted by user${NC}"
+            exit 1
+        fi
+    else
+        echo ""
+        echo -e "${BOLD}AI review found issues. Proceed with commit anyway? (y/n)${NC}"
+        exec < /dev/tty
+        read -r response
+
+        if [ "$response" != "y" ] && [ "$response" != "Y" ]; then
+            echo -e "${YELLOW}⚠ Commit aborted by user${NC}"
+            exit 1
+        fi
+    fi
+fi
+
+exit 0

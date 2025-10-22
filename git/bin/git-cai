@@ -1,0 +1,3 @@
+#!/bin/bash
+touch .git/AI_REVIEW
+git commit "$@"
