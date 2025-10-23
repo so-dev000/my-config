@@ -5,7 +5,8 @@
 │   ├── .git-hooks
 │   │   ├── ai-review.sh
 │   │   ├── pre-commit
-│   │   └── review-prompt.txt
+│   │   ├── review-prompt.txt
+│   │   └── update-readme.sh
 │   ├── .gitconfig
 │   ├── README.md
 │   └── bin
@@ -13,4 +14,6 @@
 └── zed
     ├── pyrightconfig.json
     └── settings.json
+
+5 directories, 10 files
 ```
