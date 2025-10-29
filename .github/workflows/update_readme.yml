@@ -21,7 +21,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y tree
 
       - name: Generate tree and overwrite README.md
-        run: (echo '```'; tree -I 'node_modules|.git|.github'; echo '```') > README.md
+        run: (echo '```'; tree -a; echo '```') > README.md
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
