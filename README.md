@@ -1,3 +1,4 @@
+```
 .
 ├── README.md
 ├── git
@@ -10,3 +11,4 @@
 └── zsh
 
 5 directories, 5 files
+```
