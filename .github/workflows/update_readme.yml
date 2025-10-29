@@ -1,13 +1,11 @@
 name: Generate README from Tree
 
-# mainブランチにpushされた時にこのワークフローを実行する
 on:
   push:
     branches:
       - main
-  workflow_dispatch: # 手動実行も可能にする
+  workflow_dispatch:
 
-# ワークフローがリポジトリに書き込む権限を与える
 permissions:
   contents: write
 
@@ -16,20 +14,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. リポジトリのコードをチェックアウトする
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. treeコマンドをインストールする
       - name: Install tree
         run: sudo apt-get update && sudo apt-get install -y tree
 
-      # 3. treeコマンドを実行し、README.mdを完全に上書きする
-      # -I オプションで不要なディレクトリを除外
       - name: Generate tree and overwrite README.md
-        run: tree -I 'node_modules|.git|.github' > README.md
+        run: (echo '```'; tree -I 'node_modules|.git|.github'; echo '```') > README.md
 
-      # 4. 変更をコミット＆プッシュする
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
