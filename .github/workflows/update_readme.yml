@@ -26,7 +26,7 @@ jobs:
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "docs: Regenerate README with directory tree"
+          commit_message: "auto generate README.md with tree command"
           file_pattern: README.md
           commit_user_name: "github-actions[bot]"
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
