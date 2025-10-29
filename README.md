@@ -1,14 +1,12 @@
-```bash
 .
 ├── README.md
 ├── git
-│   ├── .gitconfig
 │   ├── README.md
 │   └── bin
 │       └── git-cai
-└── zed
-    ├── pyrightconfig.json
-    └── settings.json
+├── zed
+│   ├── pyrightconfig.json
+│   └── settings.json
+└── zsh
 
-4 directories, 6 files
-```
+5 directories, 5 files
